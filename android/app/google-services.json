@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1020872415882",
+    "project_id": "calm-1232c",
+    "storage_bucket": "calm-1232c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020872415882:android:36b323bb14219bc7366b73",
+        "android_client_info": {
+          "package_name": "com.example.calm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOtSTVMbaksPK3HkGveQ6eBfesQwXdjzk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
