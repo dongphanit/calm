@@ -1,9 +1,13 @@
+// import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class MiniMusicPlayer extends StatelessWidget {
   final String title;
   final String author;
   final VoidCallback onPlayPause;
+  final VoidCallback onClose;
+  final VoidCallback onFullScreen;
   final bool isPlaying;
 
   const MiniMusicPlayer({
@@ -11,6 +15,8 @@ class MiniMusicPlayer extends StatelessWidget {
     required this.title,
     required this.author,
     required this.onPlayPause,
+    required this.onClose,
+    required this.onFullScreen,
     required this.isPlaying,
   });
 
@@ -26,8 +32,8 @@ class MiniMusicPlayer extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.music_note, color: Colors.white),
-          const SizedBox(width: 12),
+           Icon(Icons.music_note, color: Colors.white),
+           SizedBox(width: 12),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +51,16 @@ class MiniMusicPlayer extends StatelessWidget {
               color: Colors.white,
               size: 32,
             ),
-          )
+          ),
+          IconButton(
+            onPressed: onFullScreen,
+            icon: const Icon(Icons.fullscreen, color: Colors.white, size: 32),
+          ),
+          SizedBox(width: 8),
+          IconButton(
+            onPressed: onClose,
+            icon: const Icon(Icons.close, color: Colors.white, size: 32),
+          ),
         ],
       ),
     );

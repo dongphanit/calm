@@ -1,4 +1,5 @@
 import 'package:calm/firestore_service.dart';
+import 'package:calm/util.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -13,31 +14,47 @@ class CalmDetailScreen extends StatefulWidget {
 }
 
 class _CalmDetailScreenState extends State<CalmDetailScreen> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  
 
   int? currentIndex = 0; // Index bài đang phát
   bool isPlaying = false;
 
   @override
   void initState() {
-    super.initState();
-    // loadData();
+    super.initState();// Sử dụng AudioManager để lấy AudioPlayer
+   
+    AudioManager.audioPlayer.playerStateStream.listen((state) {
+      if (state.playing) {
+        print("Đang playing");
+      }
+
+      if (state.processingState == ProcessingState.completed) {
+        print("Đã phát xong");
+      }
+
+      if (state.processingState == ProcessingState.idle) {
+        print("Chưa từng phát hoặc đã được dừng hoàn toàn");
+      }
+    });
   }
 
   @override
   void dispose() {
-    _audioPlayer.dispose(); // Dọn tài nguyên khi rời màn
+    AudioManager.audioPlayer.dispose(); // Dọn tài nguyên khi rời màn
     super.dispose();
   }
-
 
   Future<void> playTrack(int index) async {
     final track = widget.allTracks[index];
     final audioUrl = track['audioUrl'];
 
     try {
-      await _audioPlayer.setUrl(audioUrl);
-      await _audioPlayer.play();
+      // check _audioPlayer đã playy chưaa
+      if (AudioManager.audioPlayer.playing) {
+        await AudioManager.audioPlayer.stop(); // Dừng phát nếu đang phát
+      }
+      await AudioManager.audioPlayer.setUrl(audioUrl);
+      await AudioManager.audioPlayer.play();
 
       setState(() {
         currentIndex = index;
@@ -45,7 +62,7 @@ class _CalmDetailScreenState extends State<CalmDetailScreen> {
       });
 
       // Theo dõi trạng thái kết thúc
-      _audioPlayer.playerStateStream.listen((state) {
+      AudioManager.audioPlayer.playerStateStream.listen((state) {
         if (state.processingState == ProcessingState.completed) {
           setState(() {
             isPlaying = false;
@@ -58,13 +75,13 @@ class _CalmDetailScreenState extends State<CalmDetailScreen> {
   }
 
   Future<void> togglePlayPause() async {
-    if (_audioPlayer.playing) {
-      await _audioPlayer.pause();
+    if (AudioManager.audioPlayer.playing) {
+      await AudioManager.audioPlayer.pause();
     } else {
-      await _audioPlayer.play();
+      await AudioManager.audioPlayer.play();
     }
     setState(() {
-      isPlaying = _audioPlayer.playing;
+      isPlaying = AudioManager.audioPlayer.playing;
     });
   }
 
@@ -74,7 +91,7 @@ class _CalmDetailScreenState extends State<CalmDetailScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, size: 30, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop(); // Quay về màn hình trước
           },

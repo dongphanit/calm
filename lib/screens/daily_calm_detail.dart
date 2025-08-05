@@ -1,7 +1,8 @@
 import 'package:calm/firestore_service.dart';
+import 'package:calm/util.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-
+import 'package:intl/intl.dart';
 class DailyCalmDetailScreen extends StatefulWidget {
   const DailyCalmDetailScreen({super.key});
 
@@ -21,6 +22,7 @@ class _DailyCalmDetailScreenState extends State<DailyCalmDetailScreen> {
   @override
   void initState() {
     super.initState();
+    AudioManager.audioPlayer.stop(); // Dừng phát nếu đang phát trước đó
     loadData();
   }
 
@@ -38,6 +40,9 @@ class _DailyCalmDetailScreenState extends State<DailyCalmDetailScreen> {
   }
 
   Future<void> playTrack(int index) async {
+    setState(() {
+            isPlaying = false;
+          });
     final track = allTracks[index];
     final audioUrl = track['audioUrl'];
 
@@ -64,14 +69,17 @@ class _DailyCalmDetailScreenState extends State<DailyCalmDetailScreen> {
   }
 
   Future<void> togglePlayPause() async {
-    if (_audioPlayer.playing) {
+   
+    setState(() {
+      isPlaying = !isPlaying; // Cập nhật trạng thái khi tạm dừng
+    });
+     if (_audioPlayer.playing) {
       await _audioPlayer.pause();
+      
     } else {
       await _audioPlayer.play();
+    
     }
-    setState(() {
-      isPlaying = _audioPlayer.playing;
-    });
   }
 
   @override
@@ -129,13 +137,16 @@ class _DailyCalmDetailScreenState extends State<DailyCalmDetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'April 30 • The Present Moment',
-                  style: TextStyle(
+
+                // Trong Widget:
+                Text(
+                  '${DateFormat('MMMM d').format(DateTime.now())} • The Present Moment',
+                  style: const TextStyle(
                     fontSize: 18,
                     color: Colors.white70,
                   ),
                 ),
+
                 const SizedBox(height: 30),
                 Center(
                   child: ElevatedButton(

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SleepScreen extends StatefulWidget {
-  final Function(String title, String author, String audio) onTrackSelected;
+  final Function(String title, String author, String audio, String imageUrl) onTrackSelected;
 
   const SleepScreen({super.key, required this.onTrackSelected});
 
@@ -13,25 +13,23 @@ class SleepScreen extends StatefulWidget {
 }
 
 class _SleepScreenState extends State<SleepScreen> {
+  List<Map<String, dynamic>> albumTracks = [];
+  List<Map<String, dynamic>> otherStories = [];
 
-  List<Map<String, dynamic>> albumTracks = [];  
-List<Map<String, dynamic>> otherStories = [];
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
 
-@override
-void initState() {
-  super.initState();
-  loadData();
-}
-
-Future<void> loadData() async {
-  final sleepTracks = await FirestoreService().getSleepTracks();
-  albumTracks = await FirestoreService().getAlbumSleepTracks();
-  setState(() {
-    albumTracks =albumTracks;
-    otherStories = sleepTracks;
-  });
-}
-
+  Future<void> loadData() async {
+    final sleepTracks = await FirestoreService().getSleepTracks();
+    albumTracks = await FirestoreService().getAlbumSleepTracks();
+    setState(() {
+      albumTracks = albumTracks;
+      otherStories = sleepTracks;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +51,7 @@ Future<void> loadData() async {
               ),
               const SizedBox(height: 8),
               Text(
-                'Soothing stories and sounds to help you fall asleep',
+                '01 stories and sounds to help you fall asleep',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white70,
@@ -79,14 +77,14 @@ Future<void> loadData() async {
                     final item = albumTracks[index];
                     return GestureDetector(
                       onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CalmDetailScreen(allTracks: item['tracks'] as List<Map<String, dynamic>>
-                                  
-                                ),
-                              ),
-                            );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CalmDetailScreen(
+                                allTracks: item['tracks']
+                                    as List<Map<String, dynamic>>),
+                          ),
+                        );
                       },
                       child: Container(
                         width: 140,
@@ -149,36 +147,38 @@ Future<void> loadData() async {
                           item['title']!,
                           item['author']!,
                           item['audioUrl']!,
+                          item['imageUrl']!,
                         );
                       },
                       child: Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.white10,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            item['imageUrl']!,
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white10,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              item['imageUrl']!,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            ),
                           ),
+                          title: Text(
+                            item['title']!,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            item['author']!,
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                          trailing:
+                              Icon(Icons.play_circle_fill, color: Colors.white),
                         ),
-                        title: Text(
-                          item['title']!,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          item['author']!,
-                          style: TextStyle(color: Colors.white70),
-                        ),
-                        trailing: Icon(Icons.play_circle_fill, color: Colors.white),
                       ),
-                    ),
-                    ) ;
+                    );
                   },
                 ),
               ),

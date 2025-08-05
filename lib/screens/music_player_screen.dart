@@ -1,15 +1,24 @@
+import 'dart:convert';
+import 'dart:ui';
+import 'package:calm/util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MusicPlayerScreen extends StatefulWidget {
   final String title;
   final String author;
   final String imageUrl;
+  final String audioUrl;
 
   const MusicPlayerScreen({
     super.key,
     required this.title,
     required this.author,
+    required this.audioUrl,
     required this.imageUrl,
   });
 
@@ -17,14 +26,143 @@ class MusicPlayerScreen extends StatefulWidget {
   State<MusicPlayerScreen> createState() => _MusicPlayerScreenState();
 }
 
-class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
+class _MusicPlayerScreenState extends State<MusicPlayerScreen>
+    with TickerProviderStateMixin {
   bool isPlaying = false;
-  double progress = 0.3;
+  double progress = 0.0;
+  late AnimationController _rotationController;
+  List<Map<String, String>> favoriteSongs = [];
+
+  bool isFavorite = false;
+
+  // Progress value between 0.0 and 1.0
+  // You can replace this with a more complex logic to track the actual audio progress
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the rotation controller
+    _rotationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 20),
+    );
+
+    // Start the rotation animation
+    _rotationController.repeat();
+
+    // Listen to audio player state changes
+    //   _rotationController = AnimationController(
+    //   // vsync: this,
+    //   // duration: const Duration(seconds: 20), vsync: ,
+    // )..repeat();
+    AudioManager.audioPlayer.playerStateStream.listen((state) {
+      if (state.playing) {
+        _rotationController.repeat(); // bắt đầu xoay
+      } else {
+        _rotationController.stop(); // dừng xoay
+      }
+
+      setState(() {
+        isPlaying = state.playing;
+      });
+    });
+
+    AudioManager.audioPlayer.playerStateStream.listen((state) {
+      if (state.playing) {
+        setState(() {
+          isPlaying = true;
+          progress = AudioManager.audioPlayer.position.inSeconds /
+              AudioManager.audioPlayer.duration!.inSeconds;
+        });
+      } else if (state.processingState == ProcessingState.completed) {
+        setState(() {
+          isPlaying = false;
+        });
+      }
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
+  String formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$minutes:$seconds';
+  }
+
+  Future<void> loadFavorites(String currentTitle) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> favoriteStrings = prefs.getStringList('favoriteSongs') ?? [];
+
+    favoriteSongs = favoriteStrings
+        .map((item) => Map<String, String>.from(jsonDecode(item)))
+        .toList();
+
+    setState(() {
+      isFavorite = favoriteSongs.any((song) => song['title'] == currentTitle);
+    });
+  }
+
+  Future<void> toggleFavorite({
+    required String title,
+    required String author,
+    required String imageUrl,
+    required String audioUrl,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final songData = {
+      'title': title,
+      'author': author,
+      'imageUrl': imageUrl,
+      'audioUrl': audioUrl,
+    };
+
+    final songString = jsonEncode(songData);
+
+    List<String> favorites = prefs.getStringList('favoriteSongs') ?? [];
+
+    setState(() {
+      if (favorites.contains(songString)) {
+        favorites.remove(songString);
+        isFavorite = false;
+      } else {
+        favorites.add(songString);
+        isFavorite = true;
+      }
+    });
+
+    await prefs.setStringList('favoriteSongs', favorites);
+
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(isFavorite? Icons.favorite: Icons.favorite_outline, color: Colors.white),
+            onPressed: () {
+              toggleFavorite(
+                title: widget.title,
+                author: widget.author,
+                imageUrl: widget.imageUrl,
+                audioUrl: widget.audioUrl,
+              );
+
+              // Add your favorite logic here
+            },
+          ),
+        ],
+      ),
       body: Stack(
         children: [
           /// Background image
@@ -32,12 +170,40 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
             child: Image.network(
               widget.imageUrl,
               fit: BoxFit.cover,
-              color: Colors.black.withOpacity(0.5),
-              colorBlendMode: BlendMode.darken,
+            ),
+          ),
+          const SizedBox(height: 32),
+          AnimatedBuilder(
+            animation: _rotationController,
+            builder: (_, child) {
+              return Transform.rotate(
+                angle: _rotationController.value * 2 * 3.1416,
+                child: child,
+              );
+            },
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white30, width: 4),
+                image: DecorationImage(
+                  image: NetworkImage(widget.imageUrl),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
 
-          /// Overlay content
+          /// Blur effect
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+              child: Container(color: Colors.black.withOpacity(0.5)),
+            ),
+          ),
+
+          /// Main content
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
@@ -51,17 +217,18 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                         widget.title,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.playfairDisplay(
-                          fontSize: 32,
+                          fontSize: 34,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       Text(
                         widget.author,
-                        style: const TextStyle(
+                        style: GoogleFonts.openSans(
                           color: Colors.white70,
                           fontSize: 16,
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
                     ],
@@ -69,31 +236,52 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
 
                   /// Spacer
                   const SizedBox(height: 40),
+                  StreamBuilder<Duration>(
+                    stream: AudioManager.audioPlayer.positionStream,
+                    builder: (context, snapshot) {
+                      final position = snapshot.data ?? Duration.zero;
+                      final duration = AudioManager.audioPlayer.duration ??
+                          Duration(seconds: 1);
+                      final progress = position.inMilliseconds /
+                          duration.inMilliseconds.clamp(1, double.infinity);
 
-                  /// Progress bar
-                  Column(
-                    children: [
-                      Slider(
-                        value: progress,
-                        onChanged: (value) {
-                          setState(() => progress = value);
-                        },
-                        activeColor: Colors.white,
-                        inactiveColor: Colors.white24,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text("0:45",
-                                style: TextStyle(color: Colors.white70)),
-                            Text("3:15",
-                                style: TextStyle(color: Colors.white70)),
-                          ],
-                        ),
-                      ),
-                    ],
+                      /// Progress bar
+                      return Column(
+                        children: [
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              trackHeight: 3,
+                              thumbShape: const RoundSliderThumbShape(
+                                  enabledThumbRadius: 6),
+                            ),
+                            child: Slider(
+                              value: progress.clamp(0.0, 1.0),
+                              onChanged: (value) {
+                                final newPosition = Duration(
+                                  milliseconds:
+                                      (duration.inMilliseconds * value).toInt(),
+                                );
+                                AudioManager.audioPlayer.seek(newPosition);
+                              },
+                              activeColor: Colors.white,
+                              inactiveColor: Colors.white24,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(formatDuration(position),
+                                    style: TextStyle(color: Colors.white70)),
+                                Text(formatDuration(duration),
+                                    style: TextStyle(color: Colors.white70)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
 
                   /// Controls
@@ -102,23 +290,43 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.fast_rewind,
-                            color: Colors.white, size: 36),
-                        onPressed: () {},
+                            color: Colors.white, size: 32),
+                        onPressed: () {
+                          // Add your rewind logic here
+                          AudioManager.audioPlayer.seek(
+                            AudioManager.audioPlayer.position -
+                                Duration(seconds: 10),
+                          );
+                        },
                       ),
                       const SizedBox(width: 24),
                       GestureDetector(
                         onTap: () {
                           setState(() => isPlaying = !isPlaying);
+                          if (isPlaying) {
+                            AudioManager.audioPlayer.play();
+                          } else {
+                            AudioManager.audioPlayer.pause();
+                          }
+                          // Add your play/pause logic here
                         },
                         child: Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
                           ),
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(20),
                           child: Icon(
                             isPlaying ? Icons.pause : Icons.play_arrow,
-                            size: 36,
+                            size: 32,
                             color: Colors.black,
                           ),
                         ),
@@ -126,9 +334,13 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                       const SizedBox(width: 24),
                       IconButton(
                         icon: const Icon(Icons.fast_forward,
-                            color: Colors.white, size: 36),
+                            color: Colors.white, size: 32),
                         onPressed: () {
-                          
+                          AudioManager.audioPlayer.seek(
+                            AudioManager.audioPlayer.position +
+                                Duration(seconds: 10),
+                          );
+                          // Add your fast forward logic here
                         },
                       ),
                     ],

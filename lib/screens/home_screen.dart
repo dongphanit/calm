@@ -1,10 +1,14 @@
 import 'package:calm/firestore_service.dart';
 import 'package:calm/screens/bar_music.dart';
+import 'package:calm/screens/calm_detail.dart';
 import 'package:calm/screens/daily_calm_detail.dart';
+import 'package:calm/screens/favorite_screen.dart';
 import 'package:calm/screens/meditate_screen.dart';
+import 'package:calm/screens/music_player_screen.dart';
 import 'package:calm/screens/music_screen.dart';
 import 'package:calm/screens/profile_screen.dart';
 import 'package:calm/screens/sleep_screen.dart';
+import 'package:calm/util.dart';
 import 'package:flutter/material.dart';
 import '../widgets/bottom_nav_bar.dart';
 import 'package:just_audio/just_audio.dart';
@@ -24,32 +28,59 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
   String? currentTrackTitle;
   String? currentTrackAuthor;
+  String? currentTrackAudio;
+  String? currentTrackImageUrl;
   bool isPlaying = false;
-  final player = AudioPlayer();
-
+  
   @override
   void initState() {
     pages = [
-      HomePage(),
+      HomePage(onSelected: (String title) { 
+        if (title == 'Favourite') {
+          setState(() {
+            currentIndex = 0; // HomePage
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const FavoriteScreen(),
+            ),
+          );
+        } else
+        if (title == 'Sleep') {
+          setState(() {
+            currentIndex = 1; // SleepScreen
+          });
+        } else if (title == 'Meditate') {
+          setState(() {
+            currentIndex = 2; // MeditateScreen
+          });
+        } else if (title == 'Music') {
+          setState(() {
+            currentIndex = 3; // MusicScreen
+          });
+        }
+       },),
       SleepScreen(onTrackSelected: playTrack),
-      MeditateScreen(),
+      MeditateScreen(onTrackSelected: playTrack),
       MusicScreen(onTrackSelected: playTrack),
       ProfileScreen(),
     ];
-
-    // TODO: implement initState
     super.initState();
   }
 
-  Future<void> playTrack(String title, String author, String audio) async {
+  Future<void> playTrack(String title, String author, String audio, String imageUrl) async {
     // play the audio track here
 
-    await player.setUrl(audio); // hoặc file cục bộ
-    player.play();
+    await AudioManager.audioPlayer.setUrl(audio); // hoặc file cục bộ
+    AudioManager.audioPlayer.play();
 
     setState(() {
       currentTrackTitle = title;
       currentTrackAuthor = author;
+      currentTrackAudio = audio;
+      currentTrackImageUrl = imageUrl;
+      
       isPlaying = true;
     });
   }
@@ -68,14 +99,13 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          'Good Morning',
+          'Hello, User',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
-        ),
-        centerTitle: false,
+        ),  centerTitle: false,
       ),
       body: Stack(
         children: [
@@ -84,16 +114,39 @@ class _HomeScreenState extends State<HomeScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: MiniMusicPlayer(
-                title: currentTrackTitle!,
-                author: currentTrackAuthor ?? '',
-                isPlaying: isPlaying,
-                onPlayPause: () {
-                  player.playing ? player.pause() : player.play();
-                  setState(() {
-                    isPlaying = !isPlaying;
-                  });
-                },
-              ),
+                  title: currentTrackTitle!,
+                  author: currentTrackAuthor ?? '',
+                  isPlaying: isPlaying,
+                  onPlayPause: () {
+
+                    AudioManager.audioPlayer.playing ? AudioManager.audioPlayer.pause() : AudioManager.audioPlayer.play();
+                    setState(() {
+                      isPlaying = !isPlaying;
+                    });
+                  },
+                  onClose: () {
+
+                    AudioManager.audioPlayer.stop();
+                    setState(() {
+                      currentTrackTitle = null;
+                      currentTrackAuthor = null;
+                      isPlaying = false;
+                    });
+                  },
+                  onFullScreen: () {
+                    // // Navigate to the full music player screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MusicPlayerScreen(
+                          title: currentTrackTitle?? '',
+                          author: currentTrackAuthor ?? '',
+                          imageUrl:currentTrackImageUrl ?? '',
+                          audioUrl:currentTrackAudio ?? '',
+                        ),
+                      ),
+                    );
+                  }),
             ),
         ],
       ),
@@ -106,6 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class HomePage extends StatelessWidget {
+ Function(String title) onSelected;
+  HomePage({super.key, required this.onSelected});
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -192,11 +247,33 @@ class HomePage extends StatelessWidget {
               Expanded(
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: const [
-                    CategoryCard(title: 'Sleep', icon: Icons.bedtime),
-                    CategoryCard(
-                        title: 'Meditate', icon: Icons.self_improvement),
-                    CategoryCard(title: 'Music', icon: Icons.music_note),
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        onSelected('Favourite');
+                      },
+                      child: CategoryCard(title: 'Favourite', icon: Icons.favorite_border),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        onSelected('Sleep');
+                      },
+                      child: CategoryCard(title: 'Sleep', icon: Icons.bedtime),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                       onSelected('Meditate');
+                      },
+                      child: CategoryCard(
+                          title: 'Meditate', icon: Icons.self_improvement),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                         onSelected('Music');
+                      },
+                      child:
+                          CategoryCard(title: 'Music', icon: Icons.music_note),
+                    )
                   ],
                 ),
               ),

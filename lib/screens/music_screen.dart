@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MusicScreen extends StatefulWidget {
-  final Function(String title, String author, String audio) onTrackSelected;
+  final Function(String title, String author, String audio, String imageUrl) onTrackSelected;
 
   const MusicScreen({super.key, required this.onTrackSelected});
 
@@ -164,6 +164,7 @@ class _MusicScreenState extends State<MusicScreen> {
                             item['title']!,
                             item['artist']!,
                             item['audioUrl']!,
+                            item['imageUrl']!,
                           );
                         },
                         child: Container(
