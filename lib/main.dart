@@ -14,7 +14,13 @@ Future<void> main() async {
   runApp(
     ChangeNotifierProvider(
       create: (_) => PlayerController(),
-      child: CalmApp(),
+      child:MultiProvider(
+  providers: [
+    ChangeNotifierProvider(create: (_) => MoodController()),
+  ],
+  child:  CalmApp(),
+)
+
     ),
   );
 
@@ -34,7 +40,7 @@ class CalmApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Colors.black,
+        scaffoldBackgroundColor: Color(0xFFDDE5A0),
         textTheme: const TextTheme(
           bodyLarge: TextStyle(fontSize: 18, color: Colors.white),
         ),
@@ -65,6 +71,53 @@ class AppShell extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: MiniMusicPlayer(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MoodItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Mood mood;
+
+  const _MoodItem({
+    required this.icon,
+    required this.label,
+    required this.mood,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = context.watch<MoodController>();
+    final isSelected = controller.selectedMood == mood;
+
+    return GestureDetector(
+      onTap: () {
+        context.read<MoodController>().selectMood(mood);
+      },
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.black : Colors.grey.shade200,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: isSelected ? Colors.white : Colors.black54,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            ),
           ),
         ],
       ),

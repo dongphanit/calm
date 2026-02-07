@@ -161,10 +161,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
         ],
       ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: currentIndex,
-        onTap: onTabTapped,
-      ),
+      // bottomNavigationBar: BottomNavBar(
+      //   currentIndex: currentIndex,
+      //   onTap: onTabTapped,
+      // ),
     );
   }
 }
@@ -229,8 +229,6 @@ class HomePage extends StatelessWidget {
                     _featureGrid(),
                     const SizedBox(height: 20),
                     _newFeatures(),
-                    const Spacer(),
-                    _musicPlayer(),
                   ],
                 ),
               ),
@@ -240,30 +238,48 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-
-  /// HEADER
-  Widget _header() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "Good morning, Alex",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            _MoodItem(icon: Icons.sentiment_satisfied, label: "Happy"),
-            _MoodItem(icon: Icons.self_improvement, label: "Calm"),
-            _MoodItem(icon: Icons.sentiment_neutral, label: "Confused"),
-            _MoodItem(icon: Icons.sentiment_dissatisfied, label: "Sad"),
-            _MoodItem(icon: Icons.favorite_border, label: "Loving"),
-          ],
-        )
-      ],
-    );
-  }
+Widget _header() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        "Good morning, Alex",
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+      ),
+      const SizedBox(height: 12),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: const [
+          _MoodItem(
+            icon: Icons.sentiment_satisfied,
+            label: "Happy",
+            mood: Mood.happy,
+          ),
+          _MoodItem(
+            icon: Icons.self_improvement,
+            label: "Calm",
+            mood: Mood.calm,
+          ),
+          _MoodItem(
+            icon: Icons.sentiment_neutral,
+            label: "Confused",
+            mood: Mood.confused,
+          ),
+          _MoodItem(
+            icon: Icons.sentiment_dissatisfied,
+            label: "Sad",
+            mood: Mood.sad,
+          ),
+          _MoodItem(
+            icon: Icons.favorite_border,
+            label: "Loving",
+            mood: Mood.loving,
+          ),
+        ],
+      )
+    ],
+  );
+}
 
   /// QUOTE
   Widget _quoteCard() {
@@ -351,25 +367,6 @@ class HomePage extends StatelessWidget {
           Icon(Icons.play_arrow),
         ],
       ),
-    );
-  }
-}
-
-/// COMPONENTS
-class _MoodItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const _MoodItem({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(icon, size: 22),
-        const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontSize: 10)),
-      ],
     );
   }
 }
@@ -477,7 +474,7 @@ class CategoryCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 40, color: Colors.black87),
+          Icon(icon, size: 40, color: Color(0xFFDDE5A0)),
           const SizedBox(height: 10),
           Text(
             title,
@@ -488,3 +485,69 @@ class CategoryCard extends StatelessWidget {
     );
   }
 }
+
+
+enum Mood {
+  happy,
+  calm,
+  confused,
+  sad,
+  loving,
+}
+class MoodController extends ChangeNotifier {
+  Mood? _selectedMood;
+
+  Mood? get selectedMood => _selectedMood;
+
+  void selectMood(Mood mood) {
+    _selectedMood = mood;
+    notifyListeners();
+  }
+}
+class _MoodItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Mood mood;
+
+  const _MoodItem({
+    required this.icon,
+    required this.label,
+    required this.mood,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = context.watch<MoodController>();
+    final isSelected = controller.selectedMood == mood;
+
+    return GestureDetector(
+      onTap: () {
+        context.read<MoodController>().selectMood(mood);
+      },
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.black : Colors.grey.shade200,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: isSelected ? Colors.white : Colors.black54,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

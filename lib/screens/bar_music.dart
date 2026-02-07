@@ -27,7 +27,7 @@ class MiniMusicPlayer extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.black87,
+        color: Color(0xFFDDE5A0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(

@@ -15,7 +15,7 @@ class OnboardingScreen extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           Container(
-            color: Colors.black.withOpacity(0.5),
+            color: Color(0xFFDDE5A0).withOpacity(0.5),
           ),
           Padding(
             padding: const EdgeInsets.all(24.0),
@@ -36,7 +36,7 @@ class OnboardingScreen extends StatelessWidget {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
+                    foregroundColor: Color(0xFFDDE5A0),
                     minimumSize: const Size.fromHeight(50),
                   ),
                   onPressed: () {

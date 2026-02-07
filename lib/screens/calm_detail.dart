@@ -119,8 +119,8 @@ class _CalmDetailScreenState extends State<CalmDetailScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(0.8),
+                  Color(0xFFDDE5A0).withOpacity(0.4),
+                  Color(0xFFDDE5A0).withOpacity(0.8),
                 ],
               ),
             ),
@@ -157,7 +157,7 @@ class _CalmDetailScreenState extends State<CalmDetailScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
+                      foregroundColor: Color(0xFFDDE5A0),
                       shape: const CircleBorder(),
                       padding: const EdgeInsets.all(20),
                     ),

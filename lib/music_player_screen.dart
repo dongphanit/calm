@@ -46,7 +46,7 @@ class _RelaxScreenState extends State<RelaxScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFFDDE5A0),
       appBar: AppBar(
         title: Text(trackTitle),
         backgroundColor: Colors.transparent,

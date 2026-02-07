@@ -76,7 +76,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFFDDE5A0),
       appBar: AppBar(
         title: const Text("Favorites"),
         backgroundColor: Colors.transparent,

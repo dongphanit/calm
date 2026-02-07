@@ -47,7 +47,7 @@ class _YogaScreenState extends State<YogaScreen> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFFDDE5A0),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

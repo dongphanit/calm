@@ -38,7 +38,7 @@ class _RelaxScreenState extends State<MeditateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFFDDE5A0),
 
       extendBodyBehindAppBar: true,
       appBar: AppBar(

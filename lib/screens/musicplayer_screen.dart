@@ -58,7 +58,7 @@ class MiniMusicPlayer extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.black87,
+            color: Color(0xFFDDE5A0),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
@@ -304,7 +304,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-              child: Container(color: Colors.black.withOpacity(0.5)),
+              child: Container(color: Color(0xFFDDE5A0).withOpacity(0.5)),
             ),
           ),
 
@@ -421,7 +421,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black26,
+                                color: Color(0xFFDDE5A0),
                                 blurRadius: 10,
                                 spreadRadius: 1,
                                 offset: Offset(0, 4),
@@ -432,7 +432,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
                           child: Icon(
                             isPlaying ? Icons.pause : Icons.play_arrow,
                             size: 32,
-                            color: Colors.black,
+                            color: Color(0xFFDDE5A0),
                           ),
                         ),
                       ),

@@ -47,7 +47,7 @@ class _RelaxScreenState extends State<RelaxScreen> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFFDDE5A0),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -120,7 +120,7 @@ class _RelaxScreenState extends State<RelaxScreen> {
                               borderRadius: BorderRadius.circular(16),
                               gradient: LinearGradient(
                                 colors: [
-                                  Colors.black.withOpacity(0.5),
+                                  Color(0xFFDDE5A0).withOpacity(0.5),
                                   Colors.transparent,
                                 ],
                                 begin: Alignment.bottomCenter,
