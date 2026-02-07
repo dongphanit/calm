@@ -35,6 +35,11 @@ class PlayerController extends ChangeNotifier {
   void togglePlay() {
     isPlaying = !isPlaying;
     notifyListeners();
+    if (isPlaying) {
+      AudioManager.audioPlayer.play();
+    } else {
+      AudioManager.audioPlayer.pause();
+    }
   }
 
   void stop() {
@@ -43,6 +48,7 @@ class PlayerController extends ChangeNotifier {
     title = '';
     author = '';
     notifyListeners();
+    AudioManager.audioPlayer.stop();
   }
 }
 
@@ -93,11 +99,15 @@ class MiniMusicPlayer extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MusicPlayerScreen(title: player.title, author: player.author, audioUrl: player.audioUrl, imageUrl: player.imageUrl,
-                            ),
-                  ));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MusicPlayerScreen(
+                          title: player.title,
+                          author: player.author,
+                          audioUrl: player.audioUrl,
+                          imageUrl: player.imageUrl,
+                        ),
+                      ));
                 },
                 icon:
                     const Icon(Icons.fullscreen, color: Colors.white, size: 32),

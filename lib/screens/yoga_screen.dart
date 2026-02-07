@@ -24,8 +24,8 @@ class _YogaScreenState extends State<YogaScreen> {
   }
 
   Future<void> loadData() async {
-    final sleepTracks = await FirestoreService().getSleepTracks();
-    albumTracks = await FirestoreService().getAlbumSleepTracks();
+    final sleepTracks = await FirestoreService().getYogaTracks();
+    albumTracks = await FirestoreService().getAlbumYogaTracks();
     setState(() {
       albumTracks = albumTracks;
       otherStories = sleepTracks;

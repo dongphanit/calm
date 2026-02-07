@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:calm/firestore_service.dart';
+import 'package:calm/screens/admin.dart';
 import 'package:calm/screens/bar_music.dart';
 import 'package:calm/screens/calm_detail.dart';
 import 'package:calm/screens/daily_calm_detail.dart';
@@ -227,7 +228,16 @@ class HomePage extends StatelessWidget {
                     _quoteCard(),
                     const SizedBox(height: 20),
                     _featureGrid(),
-                    // const SizedBox(height: 20),
+                    const SizedBox(height: 30),
+                    TextButton(onPressed: (){
+Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AdminDashboardPage(),
+                ),
+              );
+                    }, child: Text("Admin"))
                     // _newFeatures(),
                   ],
                 ),

@@ -24,8 +24,8 @@ class _RelaxScreenState extends State<RelaxScreen> {
   }
 
   Future<void> loadData() async {
-    final sleepTracks = await FirestoreService().getMusicTracks();
-    final album = await FirestoreService().getAlbumMusicTracks();
+    final sleepTracks = await FirestoreService().getRelaxTracks();
+    final album = await FirestoreService().getAlbumRelaxTracks();
     setState(() {
       featuredTracks = album.toList(); // 3 bài đầu tiên làm nổi bật
       allTracks = sleepTracks.skip(0).toList(); // các bài còn lại

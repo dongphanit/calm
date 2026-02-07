@@ -9,9 +9,9 @@ class FirestoreService {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
-  /// Get all sleep tracks
-  Future<List<Map<String, dynamic>>> getSleepTracks() async {
-    final snapshot = await _db.collection('sleep_tracks').get();
+  /// Get all yoga tracks
+  Future<List<Map<String, dynamic>>> getYogaTracks() async {
+    final snapshot = await _db.collection('yoga_tracks').get();
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
@@ -21,47 +21,47 @@ class FirestoreService {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
-  /// Get all music tracks
-  Future<List<Map<String, dynamic>>> getMusicTracks() async {
-    final snapshot = await _db.collection('music_tracks').get();
+  /// Get all relax tracks
+  Future<List<Map<String, dynamic>>> getRelaxTracks() async {
+    final snapshot = await _db.collection('relax_tracks').get();
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
-  Future<List<Map<String, dynamic>>> getAlbumMusicTracks() async {
+  Future<List<Map<String, dynamic>>> getAlbumRelaxTracks() async {
     final snapshot = await _db.collection('albums').get();
-    // lọc album có type là music
-    final musicAlbums =
-        snapshot.docs.where((doc) => doc.data()['type'] == 'music');
-    return musicAlbums.map((doc) => doc.data()).toList();
+    // lọc album có type là relax
+    final relaxAlbums =
+        snapshot.docs.where((doc) => doc.data()['type'] == 'relax');
+    return relaxAlbums.map((doc) => doc.data()).toList();
   }
 
-  Future<List<Map<String, dynamic>>> getAlbumSleepTracks() async {
+  Future<List<Map<String, dynamic>>> getAlbumYogaTracks() async {
     final snapshot = await _db.collection('albums').get();
-    // lọc album có type là music
-    final musicAlbums =
-        snapshot.docs.where((doc) => doc.data()['type'] == 'sleep');
-    return musicAlbums.map((doc) => doc.data()).toList();
+    // lọc album có type là relax
+    final relaxAlbums =
+        snapshot.docs.where((doc) => doc.data()['type'] == 'yoga');
+    return relaxAlbums.map((doc) => doc.data()).toList();
   }
 
   Future<List<Map<String, dynamic>>> getAlbumMeditationsTracks() async {
     final snapshot = await _db.collection('albums').get();
-    // lọc album có type là music
-    final musicAlbums =
+    // lọc album có type là relax
+    final relaxAlbums =
         snapshot.docs.where((doc) => doc.data()['type'] == 'meditation');
-    return musicAlbums.map((doc) => doc.data()).toList();
+    return relaxAlbums.map((doc) => doc.data()).toList();
   }
 
   // lll
-  /// Seed dummy data for multiple music albums
+  /// Seed dummy data for multiple relax albums
 
-  Future<void> seedMultipleMusicAlbums() async {
+  Future<void> seedMultipleRelaxAlbums() async {
     final List<Map<String, dynamic>> albums = [
       {
-        "title": "Nature Music",
-        "description": "Instrumental music inspired by nature.",
+        "title": "Nature Relax",
+        "description": "Instrumental relax inspired by nature.",
         "imageUrl": "https://i.imgur.com/XRrZfAl.jpg",
         "author": "Calm App",
-        "type": "music",
+        "type": "relax",
         "tracks": [
           {
             "title": "Mountain Air",
@@ -69,7 +69,7 @@ class FirestoreService {
             "imageUrl": "https://i.imgur.com/XRrZfAl.jpg",
             "duration": 12,
             "audioUrl":
-                "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/02%20Sleepy%20Twilight%20-%20Guided%20Meditati.mp3"
+                "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3"
           },
           {
             "title": "Forest Piano",
@@ -77,7 +77,7 @@ class FirestoreService {
             "imageUrl": "https://i.imgur.com/0rVeh4b.jpg",
             "duration": 18,
             "audioUrl":
-                "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/03%20Forest%20Piano.mp3"
+                "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/03%20Forest%20Piano.mp3"
           },
           {
             "title": "River Flow",
@@ -85,16 +85,16 @@ class FirestoreService {
             "imageUrl": "https://i.imgur.com/LK2ZpOZ.jpg",
             "duration": 10,
             "audioUrl":
-                "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/04%20River%20Flow.mp3"
+                "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/04%20River%20Flow.mp3"
           }
         ]
       },
       {
         "title": "Calm Vibes",
-        "description": "Relaxing ambient music for sleep and study.",
+        "description": "Relaxing ambient relax for yoga and study.",
         "imageUrl": "https://i.imgur.com/vZ3Fz9p.jpg",
         "author": "Calm App",
-        "type": "music",
+        "type": "relax",
         "tracks": [
           {
             "title": "Evening Breeze",
@@ -102,7 +102,7 @@ class FirestoreService {
             "imageUrl": "https://i.imgur.com/4ZQZQ3a.jpg",
             "duration": 14,
             "audioUrl":
-                "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/05%20Evening%20Breeze.mp3"
+                "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/05%20Evening%20Breeze.mp3"
           },
           {
             "title": "Night Forest",
@@ -110,7 +110,7 @@ class FirestoreService {
             "imageUrl": "https://i.imgur.com/Z34jQ3a.jpg",
             "duration": 20,
             "audioUrl":
-                "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/06%20Night%20Forest.mp3"
+                "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/06%20Night%20Forest.mp3"
           },
           {
             "title": "Gentle Lake",
@@ -118,16 +118,16 @@ class FirestoreService {
             "imageUrl": "https://i.imgur.com/GZ3lZaa.jpg",
             "duration": 16,
             "audioUrl":
-                "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/07%20Gentle%20Lake.mp3"
+                "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/07%20Gentle%20Lake.mp3"
           }
         ]
       },
       {
-        "title": "Deep Sleep Sounds",
-        "description": "Soothing sounds for deep sleep.",
+        "title": "Deep Yoga Sounds",
+        "description": "Soothing sounds for deep yoga.",
         "imageUrl": "https://i.imgur.com/hgU3yNJ.jpg",
         "author": "Calm App",
-        "type": "music",
+        "type": "relax",
         "tracks": [
           {
             "title": "Ocean Waves",
@@ -135,7 +135,7 @@ class FirestoreService {
             "imageUrl": "https://i.imgur.com/7CkY6B9.jpg",
             "duration": 22,
             "audioUrl":
-                "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/08%20Ocean%20Waves.mp3"
+                "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/08%20Ocean%20Waves.mp3"
           },
           {
             "title": "Rain Drops",
@@ -143,7 +143,7 @@ class FirestoreService {
             "imageUrl": "https://i.imgur.com/uB3ZQ2e.jpg",
             "duration": 19,
             "audioUrl":
-                "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/09%20Rain%20Drops.mp3"
+                "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/09%20Rain%20Drops.mp3"
           },
           {
             "title": "Windy Hills",
@@ -151,18 +151,18 @@ class FirestoreService {
             "imageUrl": "https://i.imgur.com/XH3zYAf.jpg",
             "duration": 17,
             "audioUrl":
-                "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/10%20Windy%20Hills.mp3"
+                "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/10%20Windy%20Hills.mp3"
           }
         ]
       },
     ];
 
     for (int i = 0; i < albums.length; i++) {
-      final albumId = 'album_music_$i';
+      final albumId = 'album_relax_$i';
       await _db.collection('albums').doc(albumId).set(albums[i]);
     }
 
-    print('✅ Seeded ${albums.length} music albums!');
+    print('✅ Seeded ${albums.length} relax albums!');
   }
 
   /// Seed dummy data Daily Tracks
@@ -174,7 +174,7 @@ class FirestoreService {
         "imageUrl": "https://i.imgur.com/hgU3yNJ.jpg",
         "duration": 10,
         "audioUrl":
-            "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/02%20Sleepy%20Twilight%20-%20Guided%20Meditati.mp3",
+            "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3",
       },
       {
         "title": "Evening Relaxation",
@@ -182,7 +182,7 @@ class FirestoreService {
         "imageUrl": "https://i.imgur.com/qnN4jPM.jpg",
         "duration": 12,
         "audioUrl":
-            "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/02%20Sleepy%20Twilight%20-%20Guided%20Meditati.mp3",
+            "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3",
       },
     ];
 
@@ -193,21 +193,21 @@ class FirestoreService {
 
   /// Seed dummy data
   Future<void> seedDummyData() async {
-    await _seedSleepTracks();
+    await _seedYogaTracks();
     await _seedMeditations();
-    await _seedMusicTracks();
+    await _seedRelaxTracks();
     print('✅ Dummy data seeded successfully!');
   }
 
-  Future<void> _seedSleepTracks() async {
-    final List<Map<String, dynamic>> sleepTracks = [
+  Future<void> _seedYogaTracks() async {
+    final List<Map<String, dynamic>> yogaTracks = [
       {
-        "title": "Ocean Sleep",
+        "title": "Ocean Yoga",
         "author": "Clara Moon",
         "imageUrl": "https://i.imgur.com/8Km9tLL.jpg",
         "duration": 15,
         "audioUrl":
-            "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/02%20Sleepy%20Twilight%20-%20Guided%20Meditati.mp3",
+            "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3",
         "tags": ["ocean", "night"],
       },
       {
@@ -216,16 +216,16 @@ class FirestoreService {
         "imageUrl": "https://i.imgur.com/vZ3Fz9p.jpg",
         "duration": 20,
         "audioUrl":
-            "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/02%20Sleepy%20Twilight%20-%20Guided%20Meditati.mp3",
+            "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3",
         "tags": ["rain", "calm"],
       },
     ];
 
-    for (int i = 0; i < sleepTracks.length; i++) {
+    for (int i = 0; i < yogaTracks.length; i++) {
       await _db
-          .collection('sleep_tracks')
-          .doc('sleep_00$i')
-          .set(sleepTracks[i]);
+          .collection('yoga_tracks')
+          .doc('yoga_00$i')
+          .set(yogaTracks[i]);
     }
   }
 
@@ -237,7 +237,7 @@ class FirestoreService {
         "imageUrl": "https://i.imgur.com/hgU3yNJ.jpg",
         "duration": 10,
         "audioUrl":
-            "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/02%20Sleepy%20Twilight%20-%20Guided%20Meditati.mp3",
+            "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3",
       },
       {
         "title": "Mindful Morning",
@@ -245,7 +245,7 @@ class FirestoreService {
         "imageUrl": "https://i.imgur.com/qnN4jPM.jpg",
         "duration": 12,
         "audioUrl":
-            "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/02%20Sleepy%20Twilight%20-%20Guided%20Meditati.mp3",
+            "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3",
       },
     ];
 
@@ -257,15 +257,15 @@ class FirestoreService {
     }
   }
 
-  Future<void> _seedMusicTracks() async {
-    final List<Map<String, dynamic>> musicTracks = [
+  Future<void> _seedRelaxTracks() async {
+    final List<Map<String, dynamic>> relaxTracks = [
       {
         "title": "Mountain Air",
         "artist": "NatureTone",
         "imageUrl": "https://i.imgur.com/XRrZfAl.jpg",
         "duration": 12,
         "audioUrl":
-            "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/02%20Sleepy%20Twilight%20-%20Guided%20Meditati.mp3",
+            "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3",
       },
       {
         "title": "Forest Piano",
@@ -273,15 +273,44 @@ class FirestoreService {
         "imageUrl": "https://i.imgur.com/0rVeh4bl.jpg",
         "duration": 18,
         "audioUrl":
-            "https://ia601902.us.archive.org/3/items/GentlyFallAsleep/02%20Sleepy%20Twilight%20-%20Guided%20Meditati.mp3",
+            "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3",
       },
     ];
 
-    for (int i = 0; i < musicTracks.length; i++) {
+    for (int i = 0; i < relaxTracks.length; i++) {
       await _db
-          .collection('music_tracks')
-          .doc('music_00$i')
-          .set(musicTracks[i]);
+          .collection('relax_tracks')
+          .doc('relax_00$i')
+          .set(relaxTracks[i]);
+    }
+  }
+
+  Future<void> _seedBreathingTracks() async {
+    final List<Map<String, dynamic>> breathings = [
+      {
+        "title": "breathings Air",
+        "artist": "breathings",
+        "imageUrl": "https://i.imgur.com/XRrZfAl.jpg",
+        "duration": 12,
+        "audioUrl":
+            "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3",
+      },
+      {
+        "title": "breathings Piano",
+        "artist": "breathings Keys",
+        "imageUrl": "https://i.imgur.com/0rVeh4bl.jpg",
+        "duration": 18,
+        "audioUrl":
+            "https://ia601902.us.archive.org/3/items/GentlyFallAyoga/02%20Yogay%20Twilight%20-%20Guided%20Meditati.mp3",
+      },
+    ];
+
+    for (int i = 0; i < breathings.length; i++) {
+      await _db
+          .collection('breathing_tracks')
+          .doc('breathing_00$i')
+          .set(breathings[i]);
     }
   }
 }
+
