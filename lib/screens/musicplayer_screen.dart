@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:calm/screens/relax_screen.dart';
 import 'package:calm/util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +8,115 @@ import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class PlayerController extends ChangeNotifier {
+  String title = '';
+  String author = '';
+  String imageUrl = '';
+  String audioUrl = '';
+  bool isPlaying = false;
+
+  void playTrack({
+    required String title,
+    required String author,
+    required String imageUrl,
+    required String audioUrl,
+  }) {
+    this.title = title;
+    this.author = author;
+    this.imageUrl = imageUrl;
+    this.audioUrl = audioUrl;
+    isPlaying = true;
+    notifyListeners();
+  }
+
+  void togglePlay() {
+    isPlaying = !isPlaying;
+    notifyListeners();
+  }
+
+  void stop() {
+    // audioPlayer.stop(); // nếu có audio player
+    isPlaying = false;
+    title = '';
+    author = '';
+    notifyListeners();
+  }
+}
+
+class MiniMusicPlayer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<PlayerController>(
+      builder: (context, player, _) {
+        if (player.title.isEmpty) return SizedBox(); // chưa phát gì → ẩn
+
+        return Container(
+          height: 70,
+          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.black87,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.music_note, color: Colors.white),
+              SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(player.title,
+                        style: const TextStyle(color: Colors.white)),
+                    Text(player.author,
+                        style: const TextStyle(
+                            color: Colors.white70, fontSize: 12)),
+                  ],
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  context.read<PlayerController>().togglePlay();
+                },
+                icon: Icon(
+                  player.isPlaying
+                      ? Icons.pause_circle_filled
+                      : Icons.play_circle_fill,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RelaxScreen(
+                            onTrackSelected:
+                                (title, author, audio, imageUrl) {})),
+                  );
+                },
+                icon:
+                    const Icon(Icons.fullscreen, color: Colors.white, size: 32),
+              ),
+              SizedBox(width: 8),
+              IconButton(
+                onPressed: () {
+                  context.read<PlayerController>().stop();
+                },
+                icon: const Icon(Icons.close, color: Colors.white, size: 32),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
 
 class MusicPlayerScreen extends StatefulWidget {
   final String title;
@@ -50,11 +160,6 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
     // Start the rotation animation
     _rotationController.repeat();
 
-    // Listen to audio player state changes
-    //   _rotationController = AnimationController(
-    //   // vsync: this,
-    //   // duration: const Duration(seconds: 20), vsync: ,
-    // )..repeat();
     AudioManager.audioPlayer.playerStateStream.listen((state) {
       if (state.playing) {
         _rotationController.repeat(); // bắt đầu xoay
@@ -134,7 +239,6 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
     });
 
     await prefs.setStringList('favoriteSongs', favorites);
-
   }
 
   @override
@@ -149,7 +253,8 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen>
         ),
         actions: [
           IconButton(
-            icon: Icon(isFavorite? Icons.favorite: Icons.favorite_outline, color: Colors.white),
+            icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_outline,
+                color: Colors.white),
             onPressed: () {
               toggleFavorite(
                 title: widget.title,

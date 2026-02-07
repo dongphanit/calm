@@ -3,6 +3,7 @@ import 'package:calm/util.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:intl/intl.dart';
+
 class DailyCalmDetailScreen extends StatefulWidget {
   const DailyCalmDetailScreen({super.key});
 
@@ -41,8 +42,8 @@ class _DailyCalmDetailScreenState extends State<DailyCalmDetailScreen> {
 
   Future<void> playTrack(int index) async {
     setState(() {
-            isPlaying = false;
-          });
+      isPlaying = false;
+    });
     final track = allTracks[index];
     final audioUrl = track['audioUrl'];
 
@@ -69,16 +70,13 @@ class _DailyCalmDetailScreenState extends State<DailyCalmDetailScreen> {
   }
 
   Future<void> togglePlayPause() async {
-   
     setState(() {
       isPlaying = !isPlaying; // Cập nhật trạng thái khi tạm dừng
     });
-     if (_audioPlayer.playing) {
+    if (_audioPlayer.playing) {
       await _audioPlayer.pause();
-      
     } else {
       await _audioPlayer.play();
-    
     }
   }
 

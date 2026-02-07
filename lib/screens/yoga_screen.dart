@@ -3,16 +3,17 @@ import 'package:calm/screens/calm_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SleepScreen extends StatefulWidget {
-  final Function(String title, String author, String audio, String imageUrl) onTrackSelected;
+class YogaScreen extends StatefulWidget {
+  final Function(String title, String author, String audio, String imageUrl)
+      onTrackSelected;
 
-  const SleepScreen({super.key, required this.onTrackSelected});
+  const YogaScreen({super.key, required this.onTrackSelected});
 
   @override
-  State<SleepScreen> createState() => _SleepScreenState();
+  State<YogaScreen> createState() => _YogaScreenState();
 }
 
-class _SleepScreenState extends State<SleepScreen> {
+class _YogaScreenState extends State<YogaScreen> {
   List<Map<String, dynamic>> albumTracks = [];
   List<Map<String, dynamic>> otherStories = [];
 
@@ -34,6 +35,18 @@ class _SleepScreenState extends State<SleepScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Quay về màn hình trước
+          },
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Padding(

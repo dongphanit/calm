@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 
-class MusicPlayerScreen extends StatefulWidget {
+class RelaxScreen extends StatefulWidget {
   @override
-  _MusicPlayerScreenState createState() => _MusicPlayerScreenState();
+  _RelaxScreenState createState() => _RelaxScreenState();
 }
 
-class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
+class _RelaxScreenState extends State<RelaxScreen> {
   final AudioPlayer _player = AudioPlayer();
 
   final String trackUrl =
@@ -76,7 +76,6 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                 final durationState = snapshot.data;
                 final position = durationState?.position ?? Duration.zero;
                 final total = durationState?.total ?? Duration.zero;
-
                 return Column(
                   children: [
                     Slider(

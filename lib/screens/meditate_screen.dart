@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MeditateScreen extends StatefulWidget {
-  final Function(String title, String author, String audio,String imageUrl) onTrackSelected;
+  final Function(String title, String author, String audio, String imageUrl)
+      onTrackSelected;
 
   const MeditateScreen({super.key, required this.onTrackSelected});
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _MusicPlayerScreenState();
+    return _RelaxScreenState();
   }
 }
 
-class _MusicPlayerScreenState extends State<MeditateScreen> {
+class _RelaxScreenState extends State<MeditateScreen> {
   List<Map<String, dynamic>> allTracks = [];
   List<Map<String, dynamic>> featuredTracks = [];
   List<Map<String, dynamic>> albumTracks = [];
@@ -38,6 +39,19 @@ class _MusicPlayerScreenState extends State<MeditateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Quay về màn hình trước
+          },
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -66,7 +80,8 @@ class _MusicPlayerScreenState extends State<MeditateScreen> {
               ),
 
               const SizedBox(height: 24),
-/// All Music
+
+              /// All Music
               Text(
                 'ALL MUSIC',
                 style: TextStyle(
@@ -85,7 +100,7 @@ class _MusicPlayerScreenState extends State<MeditateScreen> {
                         onTap: () {
                           widget.onTrackSelected(
                             item['title']!,
-                            item['artist']??"",
+                            item['artist'] ?? "",
                             item['audioUrl']!,
                             item['imageUrl']!,
                           );
@@ -111,7 +126,7 @@ class _MusicPlayerScreenState extends State<MeditateScreen> {
                               style: TextStyle(color: Colors.white),
                             ),
                             subtitle: Text(
-                              item['artist']??"",
+                              item['artist'] ?? "",
                               style: TextStyle(color: Colors.white70),
                             ),
                             trailing: Icon(Icons.play_circle_fill,

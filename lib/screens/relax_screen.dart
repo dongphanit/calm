@@ -3,16 +3,17 @@ import 'package:calm/screens/calm_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MusicScreen extends StatefulWidget {
-  final Function(String title, String author, String audio, String imageUrl) onTrackSelected;
+class RelaxScreen extends StatefulWidget {
+  final Function(String title, String author, String audio, String imageUrl)
+      onTrackSelected;
 
-  const MusicScreen({super.key, required this.onTrackSelected});
+  const RelaxScreen({super.key, required this.onTrackSelected});
 
   @override
-  State<MusicScreen> createState() => _MusicScreenState();
+  State<RelaxScreen> createState() => _RelaxScreenState();
 }
 
-class _MusicScreenState extends State<MusicScreen> {
+class _RelaxScreenState extends State<RelaxScreen> {
   List<Map<String, dynamic>> featuredTracks = [];
   List<Map<String, dynamic>> allTracks = [];
 
@@ -34,6 +35,18 @@ class _MusicScreenState extends State<MusicScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Quay về màn hình trước
+          },
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Padding(
@@ -152,7 +165,6 @@ class _MusicScreenState extends State<MusicScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-
               Expanded(
                 child: ListView.builder(
                   itemCount: allTracks.length,
