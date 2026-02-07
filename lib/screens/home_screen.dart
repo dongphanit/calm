@@ -212,7 +212,7 @@ class HomePage extends StatelessWidget {
           SingleChildScrollView(
             child: Center(
               child: Container(
-                height: 2000,
+                height: 1000,
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
