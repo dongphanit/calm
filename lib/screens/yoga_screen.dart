@@ -55,7 +55,7 @@ class _YogaScreenState extends State<YogaScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Sleep',
+                'Yoga',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 38,
                   color: Colors.white,

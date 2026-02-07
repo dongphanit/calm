@@ -95,10 +95,9 @@ class MiniMusicPlayer extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => RelaxScreen(
-                            onTrackSelected:
-                                (title, author, audio, imageUrl) {})),
-                  );
+                        builder: (context) => MusicPlayerScreen(title: player.title, author: player.author, audioUrl: player.audioUrl, imageUrl: player.imageUrl,
+                            ),
+                  ));
                 },
                 icon:
                     const Icon(Icons.fullscreen, color: Colors.white, size: 32),
