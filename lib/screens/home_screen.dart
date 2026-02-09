@@ -211,9 +211,12 @@ class HomePage extends StatelessWidget {
 
           /// Main Card
           SingleChildScrollView(
-            child: Center(
+            child: Column(children: [
+                 Padding(padding: EdgeInsets.only(left: 30,right: 30), child: _header(),),
+                    const SizedBox(height: 16),
+                     Center(
               child: Container(
-                height: 1000,
+                height: 700,
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -223,26 +226,15 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _header(),
-                    const SizedBox(height: 16),
                     _quoteCard(),
-                    const SizedBox(height: 20),
                     _featureGrid(),
                     const SizedBox(height: 30),
-                    TextButton(onPressed: (){
-Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      AdminDashboardPage(),
-                ),
-              );
-                    }, child: Text("Admin"))
-                    // _newFeatures(),
+                 
                   ],
                 ),
               ),
             ),
+            ],)
           )
         ],
       ),
@@ -252,11 +244,12 @@ Widget _header() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      const SizedBox(height: 40),
       const Text(
         "Good morning, Alex",
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
       ),
-      const SizedBox(height: 12),
+      const SizedBox(height: 30),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: const [
@@ -295,10 +288,10 @@ Widget _header() {
   Widget _quoteCard() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(20),
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.white.withOpacity(0.6),
+      //   borderRadius: BorderRadius.circular(20),
+      // ),
       child: const Center(
         child: Text(
           "“Peace begins with a smile.”",
@@ -313,8 +306,8 @@ Widget _header() {
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
       physics: const NeverScrollableScrollPhysics(),
       children: [
         _CircleButton(
